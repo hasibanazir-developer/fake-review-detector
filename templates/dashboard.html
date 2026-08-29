@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================
+   DASHBOARD — light, flat, colour-blocked
+   60 / 30 / 10 AS VISIBLE BLOCKS
+     60%  paper   : light canvas + white product cards
+     30%  indigo  : solid hero band, stat block, card buttons
+     10%  emerald : one stat block, sentiment pills, markers
+   No blur / glow / gradient text. Cards change colour on hover.
+   Scoped to this page only — base.html is untouched.
+   ========================================================= */
+:root {
+    /* ---- 60% DOMINANT — paper ---- */
+    --paper:      #f4f5f9;
+    --card:       #ffffff;
+    --line:       #e3e6ef;
+    --line-2:     #cfd4e4;
+    --text:       #111726;
+    --text-mid:   #626b83;
+    --text-dim:   #98a0b5;
+
+    /* ---- 30% SECONDARY — indigo ---- */
+    --indigo:     #4f46e5;
+    --indigo-lit: #6366f1;
+    --indigo-ink: #3730a3;
+    --indigo-pale:#ecebfd;
+
+    /* ---- 10% ACCENT — emerald ---- */
+    --emerald:    #10b981;
+    --emerald-dk: #047857;
+    --emerald-pale:#e4f7f0;
+
+    --pad-x: clamp(18px, 4.5vw, 72px);
+}
+
+/* ---------- SHELL (60%) ---------- */
+html, body { height: auto; overflow-x: hidden; overflow-y: auto; scroll-behavior: smooth; }
+body {
+    background: var(--paper) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
+.main-box { min-height: 100vh; }
+.content-area { padding: 0 !important; }
+
+body::-webkit-scrollbar { width: 10px; }
+body::-webkit-scrollbar-track { background: #e9ebf3; }
+body::-webkit-scrollbar-thumb { background: var(--line-2); }
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--card) !important;
+    border-bottom: 1px solid var(--line);
+    padding: 13px var(--pad-x) !important;
+}
+.nav-title { color: var(--text) !important; font-size: 15.5px !important; font-weight: 700 !important; letter-spacing: -0.015em; }
+.navbar-toggler { border-color: var(--line) !important; }
+.navbar .nav-link {
+    background: transparent !important; color: var(--text-mid) !important;
+    font-size: 14px !important; font-weight: 500 !important;
+    padding: 8px 13px !important; border-radius: 6px !important;
+}
+.navbar .nav-link:hover { background: var(--indigo-pale) !important; color: var(--indigo-ink) !important; }
+.navbar .btn {
+    background: var(--indigo-pale) !important; color: var(--indigo-ink) !important;
+    border-radius: 6px !important; font-size: 14px !important;
+    font-weight: 500 !important; padding: 8px 13px !important;
+}
+.navbar .btn:hover { background: var(--indigo) !important; color: #fff !important; }
+
+/* flash messages */
+.container.mt-3 { max-width: none !important; padding: 0 !important; margin-top: 0 !important; }
+.alert {
+    margin: 0 !important; padding: 12px var(--pad-x) !important;
+    border-radius: 0 !important; border: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+    font-size: 13.5px; font-weight: 500;
+}
+.alert-info { background: var(--indigo-pale) !important; color: var(--indigo-ink) !important; }
+
+/* =========================================================
+   1. HERO BAND — full-bleed solid indigo (the big 30% block)
+   ========================================================= */
+.dash-hero {
+    background: var(--indigo);
+    padding: clamp(32px, 5vh, 56px) var(--pad-x);
+}
+.dash-hero-inner {
+    max-width: 1360px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 26px;
+}
+.dash-label {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.66);
+}
+.dash-label i { width: 40px; height: 1px; background: rgba(255,255,255,0.42); font-style: normal; }
+.dash-title {
+    margin: 16px 0 8px;
+    font-size: clamp(26px, 3.1vw, 42px);
+    font-weight: 800; line-height: 1.08; letter-spacing: -0.045em; color: #fff;
+}
+.dash-sub { max-width: 560px; margin: 0; font-size: 15.5px; line-height: 1.6; color: rgba(255,255,255,0.8); }
+
+/* stat blocks: one white-on-indigo (30%), one solid emerald (10%) */
+.dash-stats { display: flex; flex-wrap: wrap; gap: 12px; }
+.stat {
+    min-width: 128px; padding: 16px 20px; border-radius: 12px;
+    transition: background .16s ease, border-color .16s ease;
+}
+.stat.on-indigo { background: var(--indigo-ink); border: 1px solid rgba(255,255,255,0.24); }
+.stat.on-indigo:hover { background: #2f2a8c; border-color: rgba(255,255,255,0.45); }
+.stat.on-accent { background: var(--emerald); border: 1px solid var(--emerald); }
+.stat.on-accent:hover { background: var(--emerald-dk); border-color: rgba(255,255,255,0.45); }
+.stat-num { font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.045em; color: #fff; }
+.stat-lbl {
+    margin-top: 8px; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.76);
+}
+
+/* =========================================================
+   2. PRODUCTS
+   ========================================================= */
+.dash-body {
+    max-width: 1360px; margin: 0 auto;
+    padding: clamp(28px, 4vh, 44px) var(--pad-x) clamp(48px, 7vh, 76px);
+}
+.section-head {
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+    gap: 12px; margin-bottom: 20px;
+}
+.section-head h2 {
+    margin: 0 0 5px; font-size: clamp(19px, 1.7vw, 24px);
+    font-weight: 800; letter-spacing: -0.035em; color: var(--text);
+}
+.section-head p { margin: 0; font-size: 13.8px; color: var(--text-mid); }
+.rank-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 8px;
+    background: var(--indigo-pale); border: 1px solid #dcdafb;
+    color: var(--indigo-ink); font-size: 12.5px; font-weight: 600;
+}
+.rank-pill svg { width: 14px; height: 14px; }
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+/* ---------- PRODUCT CARD (60% white surface) ---------- */
+.p-card {
+    display: flex; flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+/* HOVER: the whole card fills with indigo */
+.p-card:hover {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    transform: translateY(-4px);
+}
+
+.p-media { position: relative; height: 172px; background: #eceef5; overflow: hidden; }
+.p-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+.p-card:hover .p-media img { transform: scale(1.05); }
+.p-media-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-dim); }
+.p-media-empty svg { width: 36px; height: 36px; }
+
+/* category badge — 30% */
+.p-cat {
+    position: absolute; top: 10px; left: 10px;
+    max-width: calc(100% - 96px);
+    padding: 5px 10px; border-radius: 6px;
+    background: var(--indigo); color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.03em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.p-card:hover .p-cat { background: #fff; color: var(--indigo-ink); }
+
+/* sentiment pill — the 10% accent */
+.p-score {
+    position: absolute; top: 10px; right: 10px;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 9px; border-radius: 6px;
+    background: var(--emerald); color: #fff;
+    font-size: 11px; font-weight: 700;
+}
+.p-score.is-neg { background: #dc2626; }
+.p-score svg { width: 12px; height: 12px; }
+
+.p-body { display: flex; flex-direction: column; flex: 1; padding: 16px; }
+.p-name {
+    margin: 0 0 6px; font-size: 15.5px; font-weight: 700;
+    letter-spacing: -0.02em; color: var(--text);
+    transition: color .18s ease;
+}
+.p-desc {
+    margin: 0 0 12px; font-size: 13.2px; line-height: 1.55; color: var(--text-mid);
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden; word-wrap: break-word;
+    transition: color .18s ease;
+}
+.p-meta {
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 14px; font-size: 12px; color: var(--text-dim);
+    transition: color .18s ease;
+}
+.p-meta svg { width: 13px; height: 13px; flex: none; }
+
+/* text inverts when the card fills */
+.p-card:hover .p-name { color: #fff; }
+.p-card:hover .p-desc { color: rgba(255,255,255,0.85); }
+.p-card:hover .p-meta { color: rgba(255,255,255,0.68); }
+
+/* card CTA — 30%, inverts to emerald on hover (10%) */
+.p-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: auto; padding: 11px 16px; border-radius: 8px;
+    background: var(--indigo-pale) !important;
+    color: var(--indigo-ink) !important;
+    border: none !important;
+    font-size: 13.5px; font-weight: 600; text-decoration: none;
+    transition: background .18s ease, color .18s ease;
+}
+.p-card:hover .p-btn { background: #fff !important; color: var(--indigo-ink) !important; }
+.p-btn:hover, .p-btn:focus {
+    background: var(--emerald) !important; color: #fff !important; text-decoration: none;
+}
+.p-card:hover .p-btn:hover { background: var(--emerald) !important; color: #fff !important; }
+.p-btn svg { width: 14px; height: 14px; }
+
+/* ---------- EMPTY STATE ---------- */
+.dash-empty {
+    background: var(--card); border: 1px dashed var(--line-2);
+    border-radius: 14px; padding: 68px 24px; text-align: center;
+}
+.dash-empty svg { width: 44px; height: 44px; color: var(--text-dim); margin-bottom: 15px; }
+.dash-empty h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 0 0 6px; }
+.dash-empty p  { font-size: 14px; color: var(--text-mid); margin: 0; }
+
+/* =========================================================
+   3. FOOTER
+   ========================================================= */
+.site-footer { padding: 24px var(--pad-x); background: var(--card); border-top: 1px solid var(--line); }
+.footer-inner {
+    max-width: 1360px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 700; color: var(--text); }
+.footer-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); }
+.footer-note { font-size: 12.5px; color: var(--text-dim); }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 768px) {
+    .dash-hero-inner { align-items: flex-start; }
+    .dash-stats { width: 100%; }
+    .stat { flex: 1; min-width: 0; }
+}
+@media (max-width: 576px) {
+    .navbar { padding: 11px 16px !important; }
+    .product-grid { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 12px; }
+    .p-media { height: 128px; }
+    .p-desc { -webkit-line-clamp: 2; }
+}
+</style>
+
+<!-- ===================== 1. HERO BAND ===================== -->
+<header class="dash-hero">
+    <div class="dash-hero-inner">
+
+        <div>
+            <div class="dash-label"><i></i> Dashboard</div>
+            <h1 class="dash-title">Welcome, {{ username }}!</h1>
+            <p class="dash-sub">
+                Browse the catalogue and leave a review. Everything you post is scored for
+                sentiment and checked for duplicates as soon as it lands.
+            </p>
+        </div>
+
+        <div class="dash-stats">
+            <div class="stat on-indigo">
+                <div class="stat-num">{{ products|length }}</div>
+                <div class="stat-lbl">Products</div>
+            </div>
+            <div class="stat on-accent">
+                <div class="stat-num">3</div>
+                <div class="stat-lbl">Signals</div>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<!-- ===================== 2. PRODUCTS ===================== -->
+<main class="dash-body">
+
+    <div class="section-head">
+        <div>
+            <h2>Products</h2>
+            <p>Pick something you&rsquo;ve used and leave an honest review.</p>
+        </div>
+        <span class="rank-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            Ranked by average sentiment
+        </span>
+    </div>
+
+    {% if products %}
+    <div class="product-grid">
+        {% for product in products %}
+        <article class="p-card">
+
+            <div class="p-media">
+                {% if product.Image %}
+                    <img src="{{ product.Image.url }}" alt="{{ product.Product_Name }}">
+                {% else %}
+                    <div class="p-media-empty">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L7 20"/></svg>
+                    </div>
+                {% endif %}
+
+                {% if product.Category %}
+                    <span class="p-cat">{{ product.Category }}</span>
+                {% endif %}
+
+                {% if product.avg_sentiment != None %}
+                    <span class="p-score {% if product.avg_sentiment < 0 %}is-neg{% endif %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                        {{ product.avg_sentiment|floatformat:2 }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="p-body">
+                <h3 class="p-name">{{ product.Product_Name }}</h3>
+                <p class="p-desc">{{ product.Description|slice:":100" }}...</p>
+
+                <div class="p-meta">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    Added on {{ product.Added_At|date:"F j, Y" }}
+                </div>
+
+                <a href="{% url 'add_review' product.product_id %}" class="p-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    Add Review
+                </a>
+            </div>
+
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="dash-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        <h3>No products yet</h3>
+        <p>Once products are added from the admin panel, they&rsquo;ll show up here.</p>
+    </div>
+    {% endif %}
+
+</main>
+
+<!-- ===================== 3. FOOTER ===================== -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <span class="dot"></span>
+            Fake Review Detection System
+        </div>
+        <div class="footer-note">Sentiment &middot; Duplicates &middot; IP signals</div>
+    </div>
+</footer>
+
+{% endblock %}

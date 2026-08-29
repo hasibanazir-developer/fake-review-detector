@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================
+   ADD REVIEW — TWO-COLUMN WORKSPACE (its own design)
+   60 / 30 / 10 COLOUR RULE
+     60%  paper   : canvas + the white review list on the right
+     30%  indigo  : the solid composer panel on the left
+     10%  emerald : submit button + positive sentiment pills
+   Flat surfaces, no blur / glow / gradients.
+   Scoped to this page only — base.html is untouched.
+   ========================================================= */
+:root {
+    /* 60% */
+    --paper:    #f4f5f9;
+    --card:     #ffffff;
+    --line:     #e3e6ef;
+    --line-2:   #cfd4e4;
+    --text:     #111726;
+    --text-mid: #626b83;
+    --text-dim: #98a0b5;
+
+    /* 30% */
+    --indigo:     #4f46e5;
+    --indigo-lit: #6366f1;
+    --indigo-ink: #3730a3;
+    --indigo-pale:#ecebfd;
+
+    /* 10% */
+    --emerald:    #10b981;
+    --emerald-dk: #047857;
+
+    --pad-x: clamp(18px, 4.5vw, 64px);
+}
+
+body {
+    background: var(--paper) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
+.main-box { min-height: 100vh; }
+.content-area { padding: 0 !important; }
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--card) !important;
+    border-bottom: 1px solid var(--line);
+    padding: 13px var(--pad-x) !important;
+}
+.nav-title { color: var(--text) !important; font-size: 15.5px !important; font-weight: 700 !important; letter-spacing: -0.015em; }
+.navbar-toggler { border-color: var(--line) !important; }
+.navbar .nav-link {
+    background: transparent !important; color: var(--text-mid) !important;
+    font-size: 14px !important; font-weight: 500 !important;
+    padding: 8px 13px !important; border-radius: 6px !important;
+}
+.navbar .nav-link:hover { background: var(--indigo-pale) !important; color: var(--indigo-ink) !important; }
+.navbar .btn {
+    background: var(--indigo-pale) !important; color: var(--indigo-ink) !important;
+    border-radius: 6px !important; font-size: 14px !important;
+    font-weight: 500 !important; padding: 8px 13px !important;
+}
+.navbar .btn:hover { background: var(--indigo) !important; color: #fff !important; }
+
+/* base.html flash messages */
+.container.mt-3 { max-width: none !important; margin-top: 0 !important; padding: 0 !important; }
+.container.mt-3 .alert {
+    margin: 0 !important; border: 0 !important; border-radius: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+    padding: 11px var(--pad-x) !important;
+    font-size: 13.5px; font-weight: 500; text-align: left !important;
+}
+.container.mt-3 .alert-info { background: var(--indigo-pale) !important; color: var(--indigo-ink) !important; }
+
+/* =========================================================
+   BREADCRUMB STRIP
+   ========================================================= */
+.crumb-strip {
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    padding: 14px var(--pad-x);
+}
+.crumb-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--text-dim);
+}
+.crumb-inner a {
+    display: inline-flex; align-items: center; gap: 7px;
+    color: var(--indigo); font-weight: 600; text-decoration: none;
+}
+.crumb-inner a:hover { color: var(--indigo-ink); text-decoration: none; }
+.crumb-inner a svg { width: 14px; height: 14px; }
+.crumb-inner b { color: var(--text); font-weight: 650; }
+
+/* =========================================================
+   WORKSPACE
+   ========================================================= */
+.work {
+    max-width: 1280px; margin: 0 auto;
+    padding: clamp(24px, 4vh, 40px) var(--pad-x) clamp(48px, 7vh, 76px);
+    display: grid;
+    grid-template-columns: minmax(320px, 38%) 1fr;   /* 30% indigo | 60% paper */
+    gap: clamp(20px, 2.4vw, 32px);
+    align-items: start;
+}
+
+/* ---------- LEFT: solid indigo composer (30%) ---------- */
+.composer {
+    background: var(--indigo);
+    border-radius: 16px;
+    padding: clamp(22px, 2.4vw, 30px);
+    position: sticky; top: 78px;
+}
+.comp-label {
+    display: flex; align-items: center; gap: 11px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase;
+    color: rgba(255,255,255,0.62);
+}
+.comp-label i { width: 26px; height: 1px; background: rgba(255,255,255,0.4); font-style: normal; }
+
+.comp-product {
+    display: flex; align-items: center; gap: 14px;
+    margin: 18px 0 22px; padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.22);
+}
+.comp-thumb {
+    flex: none; width: 54px; height: 54px; border-radius: 10px;
+    background: rgba(255,255,255,0.16); overflow: hidden;
+}
+.comp-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.comp-meta { min-width: 0; }
+.comp-meta h1 {
+    margin: 0 0 4px;
+    font-size: clamp(18px, 1.7vw, 22px);
+    font-weight: 800; letter-spacing: -0.035em; line-height: 1.2; color: #fff;
+}
+.comp-meta span { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.72); }
+
+.comp-field label {
+    display: block; margin-bottom: 9px;
+    font-size: 12.5px; font-weight: 650; letter-spacing: 0.02em; color: #fff;
+}
+/* the textarea (white on indigo — high contrast, easy to write in) */
+.composer textarea#review_text,
+.composer textarea#review_text.form-control {
+    width: 100%;
+    min-height: 152px;
+    padding: 14px 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    background: #fff;
+    font-family: inherit; font-size: 14.5px; line-height: 1.6; color: var(--text);
+    outline: none; resize: vertical;
+    box-shadow: none;
+    transition: border-color .16s ease, box-shadow .16s ease;
+}
+.composer textarea#review_text::placeholder { color: var(--text-dim); }
+.composer textarea#review_text:focus {
+    border-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.28);
+}
+
+.comp-hint {
+    margin: 12px 0 0;
+    font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.72);
+}
+
+/* submit — emerald (10%) */
+.composer .btn-primary,
+.composer button[type="submit"] {
+    width: 100%;
+    margin-top: 18px !important;
+    padding: 14px 22px;
+    border: none !important; border-radius: 9px !important;
+    background: var(--emerald) !important; color: #fff !important;
+    font-family: inherit; font-size: 14.5px; font-weight: 650;
+    cursor: pointer;
+    transition: background .16s ease;
+}
+.composer button[type="submit"]:hover  { background: #0ea373 !important; }
+.composer button[type="submit"]:active { background: var(--emerald-dk) !important; }
+
+/* the page's own message block, shown inside the composer column */
+.comp-msg { margin-bottom: 18px; }
+.comp-msg .alert {
+    margin: 0 !important;
+    padding: 12px 14px !important;
+    border-radius: 10px !important;
+    background: rgba(255,255,255,0.16) !important;
+    border: 1px solid rgba(255,255,255,0.28) !important;
+    color: #fff !important;
+    font-size: 13px; text-align: left !important;
+}
+.comp-msg .alert p { margin: 0; }
+.comp-msg .alert p + p { margin-top: 5px; }
+
+/* ---------- RIGHT: reviews list (60%) ---------- */
+.reviews-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+    gap: 10px; margin-bottom: 16px;
+}
+.reviews-head h2 {
+    margin: 0; font-size: clamp(18px, 1.7vw, 22px);
+    font-weight: 800; letter-spacing: -0.035em; color: var(--text);
+}
+.reviews-count {
+    padding: 6px 12px; border-radius: 6px;
+    background: var(--indigo-pale); border: 1px solid #dcdafb;
+    color: var(--indigo-ink); font-size: 12.5px; font-weight: 650;
+}
+
+.review-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.review-item {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--line-2);
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: border-color .16s ease, transform .16s ease;
+}
+.review-item:hover { border-color: var(--line-2); transform: translateX(3px); }
+/* the left rail carries the sentiment colour */
+.review-item.is-pos { border-left-color: var(--emerald); }
+.review-item.is-neg { border-left-color: #dc2626; }
+
+.rv-top {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+}
+.rv-user {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 14px; font-weight: 700; letter-spacing: -0.01em; color: var(--text);
+}
+.rv-avatar {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--indigo-pale); color: var(--indigo-ink);
+    font-size: 12px; font-weight: 800; text-transform: uppercase;
+}
+.rv-tag {
+    padding: 4px 10px; border-radius: 5px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.rv-tag.pos { background: var(--emerald); color: #fff; }      /* accent (10%) */
+.rv-tag.neg { background: #dc2626; color: #fff; }
+.rv-tag.neu { background: #eceef5; color: var(--text-mid); }
+
+.rv-text {
+    margin: 0;
+    font-size: 14px; line-height: 1.62; color: var(--text-mid);
+    white-space: pre-wrap; word-wrap: break-word;
+}
+
+/* empty state */
+.rv-empty {
+    background: var(--card);
+    border: 1px dashed var(--line-2);
+    border-radius: 12px;
+    padding: 52px 24px; text-align: center;
+}
+.rv-empty svg { width: 40px; height: 40px; color: var(--text-dim); margin-bottom: 14px; }
+.rv-empty h3 { margin: 0 0 6px; font-size: 16px; font-weight: 700; color: var(--text); }
+.rv-empty p  { margin: 0; font-size: 13.5px; color: var(--text-mid); }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 900px) {
+    .work { grid-template-columns: 1fr; }
+    .composer { position: static; }
+}
+@media (max-width: 576px) {
+    .navbar { padding: 11px 16px !important; }
+    .container.mt-3 .alert, .crumb-strip { padding-left: 16px !important; padding-right: 16px !important; }
+    .composer, .review-item { border-radius: 12px; }
+}
+</style>
+
+<!-- ===== BREADCRUMB ===== -->
+<div class="crumb-strip">
+    <div class="crumb-inner">
+        <a href="{% url 'dashboard' %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Dashboard
+        </a>
+        <span>/</span>
+        <b>{{ product.Product_Name }}</b>
+    </div>
+</div>
+
+<!-- ===== WORKSPACE ===== -->
+<div class="work">
+
+    <!-- ---------- LEFT: indigo composer (30%) ---------- -->
+    <section class="composer">
+
+        <div class="comp-label"><i></i> Write a review</div>
+
+        <div class="comp-product">
+            <div class="comp-thumb">
+                {% if product.Image %}
+                    <img src="{{ product.Image.url }}" alt="{{ product.Product_Name }}">
+                {% endif %}
+            </div>
+            <div class="comp-meta">
+                <h1>{{ product.Product_Name }}</h1>
+                <span>{{ product.Category }}</span>
+            </div>
+        </div>
+
+        {% if messages %}
+            <div class="comp-msg">
+                <div class="alert alert-info">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group comp-field">
+                <label for="review_text">Review Text</label>
+                <textarea id="review_text" name="review_text" class="form-control" rows="4" required placeholder="What did you think of it? Be specific — vague praise is exactly what the detector looks for."></textarea>
+            </div>
+
+            <p class="comp-hint">
+                Your review is scored for sentiment, checked against your earlier reviews for
+                this product, and saved with your IP address.
+            </p>
+
+            <button type="submit" class="btn btn-primary mt-3">Submit Review</button>
+        </form>
+
+    </section>
+
+    <!-- ---------- RIGHT: previous reviews (60%) ---------- -->
+    <section class="reviews">
+
+        <div class="reviews-head">
+            <h2>Previous Reviews</h2>
+            <span class="reviews-count">{{ product.reviews.all|length }} total</span>
+        </div>
+
+        {% if product.reviews.all %}
+            <ul class="review-list">
+                {% for review in product.reviews.all %}
+                <li class="review-item {% if review.sentiment_label == "positive" %}is-pos{% elif review.sentiment_label == "negative" %}is-neg{% endif %}">
+
+                    <div class="rv-top">
+                        <span class="rv-user">
+                            <span class="rv-avatar">{{ review.user.username|slice:":1" }}</span>
+                            {{ review.user.username }}
+                        </span>
+
+                        {% if review.sentiment_label == "positive" %}
+                            <span class="rv-tag pos">{{ review.sentiment_label }}</span>
+                        {% elif review.sentiment_label == "negative" %}
+                            <span class="rv-tag neg">{{ review.sentiment_label }}</span>
+                        {% else %}
+                            <span class="rv-tag neu">{{ review.sentiment_label }}</span>
+                        {% endif %}
+                    </div>
+
+                    <p class="rv-text">{{ review.review_text }}</p>
+
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="rv-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <h3>No reviews yet for this product.</h3>
+                <p>Be the first — your review will show up here once it&rsquo;s scored.</p>
+            </div>
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================
+   LOGIN — SPLIT SCREEN layout (its own design)
+   60 / 30 / 10 COLOUR RULE
+     60%  paper   : the wide white form side
+     30%  indigo  : the solid left panel + submit button
+     10%  emerald : focus ring, step markers, the register link
+   Flat surfaces, no blur / glow / gradients.
+   Scoped to this page only — base.html is untouched.
+   ========================================================= */
+:root {
+    /* 60% */
+    --paper:    #ffffff;
+    --paper-2:  #f4f5f9;
+    --line:     #e3e6ef;
+    --line-2:   #cfd4e4;
+    --text:     #111726;
+    --text-mid: #626b83;
+    --text-dim: #98a0b5;
+
+    /* 30% */
+    --indigo:     #4f46e5;
+    --indigo-lit: #6366f1;
+    --indigo-ink: #3730a3;
+    --indigo-pale:#ecebfd;
+
+    /* 10% */
+    --emerald:     #10b981;
+    --emerald-dk:  #047857;
+}
+
+html, body { height: 100%; }
+body {
+    background: var(--paper) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
+/* let the split fill the exact height under the navbar */
+.main-box { min-height: 100vh; display: flex; flex-direction: column; }
+.content-area { padding: 0 !important; flex: 1; display: flex; }
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    flex: none;
+    background: var(--paper) !important;
+    border-bottom: 1px solid var(--line);
+    padding: 13px clamp(18px, 4vw, 44px) !important;
+}
+.nav-title { color: var(--text) !important; font-size: 15.5px !important; font-weight: 700 !important; letter-spacing: -0.015em; }
+.navbar-toggler { border-color: var(--line) !important; }
+.navbar .nav-link {
+    background: transparent !important; color: var(--text-mid) !important;
+    font-size: 14px !important; font-weight: 500 !important;
+    padding: 8px 13px !important; border-radius: 6px !important;
+}
+.navbar .nav-link:hover { background: var(--indigo-pale) !important; color: var(--indigo-ink) !important; }
+.navbar .btn {
+    background: var(--indigo-pale) !important; color: var(--indigo-ink) !important;
+    border-radius: 6px !important; font-size: 14px !important;
+    font-weight: 500 !important; padding: 8px 13px !important;
+}
+.navbar .btn:hover { background: var(--indigo) !important; color: #fff !important; }
+
+/* flash messages sit above the split, flush to the edges */
+.container.mt-3 { max-width: none !important; margin-top: 0 !important; padding: 0 !important; flex: none; }
+.alert {
+    margin: 0 !important; border: 0 !important; border-radius: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+    padding: 11px clamp(18px, 4vw, 44px) !important;
+    font-size: 13.5px; font-weight: 500; text-align: left !important;
+}
+.alert-info { background: var(--indigo-pale) !important; color: var(--indigo-ink) !important; }
+
+/* =========================================================
+   SPLIT
+   ========================================================= */
+.auth-split {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(300px, 34%) 1fr;   /* 30% indigo | 60% paper */
+}
+
+/* ---------- LEFT: solid indigo panel (30%) ---------- */
+.auth-aside {
+    background: var(--indigo);
+    padding: clamp(32px, 4vw, 52px);
+    display: flex; flex-direction: column; justify-content: space-between;
+}
+.aside-mark {
+    display: flex; align-items: center; gap: 11px;
+    font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.01em;
+}
+.aside-mark .sq {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: #fff; color: var(--indigo);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+}
+.aside-body { padding: 40px 0; }
+.aside-body h2 {
+    margin: 0 0 14px;
+    font-size: clamp(23px, 2.2vw, 31px);
+    font-weight: 800; line-height: 1.15; letter-spacing: -0.04em; color: #fff;
+}
+.aside-body > p {
+    margin: 0 0 32px; max-width: 340px;
+    font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.78);
+}
+.aside-list { margin: 0; padding: 0; list-style: none; }
+.aside-list li {
+    display: flex; align-items: flex-start; gap: 13px;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+.aside-list li:last-child { border-bottom: 1px solid rgba(255,255,255,0.2); }
+.aside-list .n {
+    flex: none; width: 22px;
+    font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.6);
+}
+.aside-list strong { display: block; font-size: 14px; font-weight: 650; color: #fff; margin-bottom: 2px; }
+.aside-list span   { font-size: 12.6px; line-height: 1.45; color: rgba(255,255,255,0.7); }
+/* the accent markers (10%) — sit at the front of each row */
+.aside-list .dot {
+    flex: none; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--emerald); margin-top: 6px;
+}
+.aside-foot { font-size: 12.5px; color: rgba(255,255,255,0.6); }
+
+/* ---------- RIGHT: white form side (60%) ---------- */
+.auth-main {
+    background: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    padding: clamp(32px, 5vw, 64px) clamp(20px, 4vw, 48px);
+}
+.auth-form { width: 100%; max-width: 390px; }
+
+.form-kicker {
+    display: flex; align-items: center; gap: 11px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase;
+    color: var(--text-dim);
+}
+.form-kicker i { width: 26px; height: 1px; background: var(--line-2); font-style: normal; }
+
+.auth-form h2 {
+    margin: 16px 0 8px;
+    font-size: clamp(25px, 2.4vw, 33px);
+    font-weight: 800; letter-spacing: -0.04em; color: var(--text); text-align: left;
+}
+.auth-form > p.hint {
+    margin: 0 0 30px; font-size: 14.5px; line-height: 1.55; color: var(--text-mid);
+}
+
+/* ---- Django {{ form.as_p }} styling ---- */
+form p { margin: 0 0 18px; }
+form label {
+    display: block; margin-bottom: 7px;
+    font-size: 12.5px; font-weight: 650; letter-spacing: 0.02em;
+    color: var(--text);
+}
+form input[type="text"],
+form input[type="password"],
+form input[type="email"] {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    background: var(--paper-2);
+    font-family: inherit; font-size: 14.5px; color: var(--text);
+    outline: none;
+    transition: border-color .16s ease, background .16s ease, box-shadow .16s ease;
+}
+form input::placeholder { color: var(--text-dim); }
+form input[type="text"]:hover,
+form input[type="password"]:hover { border-color: var(--text-dim); }
+/* focus ring uses the accent (10%) */
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form input[type="email"]:focus {
+    background: var(--paper);
+    border-color: var(--emerald);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
+}
+
+/* form errors */
+.errorlist {
+    list-style: none; margin: 8px 0 0; padding: 0;
+}
+.errorlist li {
+    font-size: 12.5px; font-weight: 500; color: #b91c1c;
+    padding: 7px 11px; border-radius: 6px;
+    background: #fdecec; border: 1px solid #f6d4d4;
+    margin-bottom: 5px;
+}
+form p .helptext { display: block; margin-top: 6px; font-size: 12px; color: var(--text-dim); }
+
+/* ---- submit (30%) ---- */
+.btn-login {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px 20px;
+    border: none; border-radius: 8px;
+    background: var(--indigo); color: #fff;
+    font-family: inherit; font-size: 14.5px; font-weight: 650;
+    cursor: pointer;
+    transition: background .16s ease;
+}
+.btn-login:hover  { background: var(--indigo-lit); }
+.btn-login:active { background: var(--indigo-ink); }
+
+/* ---- footer row ---- */
+.auth-alt {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-top: 26px; padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 13.5px; color: var(--text-mid);
+}
+.auth-alt a {
+    font-weight: 650; color: var(--emerald-dk); text-decoration: none;
+    border-bottom: 1.5px solid var(--emerald);
+    padding-bottom: 1px;
+}
+.auth-alt a:hover { color: var(--emerald); text-decoration: none; }
+
+/* =========================================================
+   RESPONSIVE — panel moves above the form
+   ========================================================= */
+@media (max-width: 880px) {
+    .auth-split  { grid-template-columns: 1fr; }
+    .auth-aside  { padding: 28px clamp(18px, 5vw, 34px); }
+    .aside-body  { padding: 26px 0 4px; }
+    .aside-list, .aside-foot { display: none; }
+    .auth-main   { padding: 34px clamp(18px, 5vw, 34px) 48px; align-items: flex-start; }
+}
+@media (max-width: 576px) {
+    .navbar { padding: 11px 16px !important; }
+    .alert  { padding: 11px 16px !important; }
+}
+</style>
+
+<div class="auth-split">
+
+    <!-- ===== LEFT: solid indigo (30%) ===== -->
+    <aside class="auth-aside">
+
+        <div class="aside-mark">
+            <span class="sq">F</span>
+            Fake Review Detection
+        </div>
+
+        <div class="aside-body">
+            <h2>Sign in to review what you&rsquo;ve actually used.</h2>
+            <p>Every review you post is scored and checked the moment you submit it.</p>
+
+            <ul class="aside-list">
+                <li>
+                    <span class="dot"></span>
+                    <span class="n">01</span>
+                    <div>
+                        <strong>Sentiment score</strong>
+                        <span>VADER reads the text and stores a score.</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span class="n">02</span>
+                    <div>
+                        <strong>Duplicate check</strong>
+                        <span>Repeated text on a product is flagged.</span>
+                    </div>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span class="n">03</span>
+                    <div>
+                        <strong>IP recorded</strong>
+                        <span>The origin address is kept with the review.</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="aside-foot">Reviewer access &middot; Admins use the admin panel</div>
+    </aside>
+
+    <!-- ===== RIGHT: white form (60%) ===== -->
+    <main class="auth-main">
+        <div class="auth-form">
+
+            <div class="form-kicker"><i></i> User access</div>
+
+            <h2>User Login</h2>
+            <p class="hint">Enter your username and password to reach the dashboard.</p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+
+            <div class="auth-alt">
+                <span>Don&rsquo;t have an account?</span>
+                <a href="{% url 'register' %}">Register</a>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+{% endblock %}

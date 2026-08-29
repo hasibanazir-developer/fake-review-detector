@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Review System</title>
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+/* ===== FULL HEIGHT ===== */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* ===== BODY ===== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #87CEEB !important;
+}
+
+/* ===== MAIN BOX ===== */
+.main-box {
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background-color: #6c63ff !important;
+    padding: 25px 20px;
+}
+
+/* TITLE */
+.nav-title {
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* NAV LINKS */
+.navbar-nav {
+    margin-left: auto;
+}
+
+/* BUTTONS GLOBAL PURPLE */
+.btn,
+.btn:hover,
+.btn:focus,
+.btn:active {
+    background-color: #6c63ff !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 20px;
+}
+
+/* FORCE BOOTSTRAP COLORS */
+.btn-success,
+.btn-primary,
+.btn-secondary {
+    background-color: #6c63ff !important;
+    border: none !important;
+}
+
+/* NAV LINKS STYLE */
+.nav-link {
+    margin: 0 6px;
+    padding: 10px 18px;
+    background-color: white;
+    color: #6c63ff !important;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    background-color: #574fd6;
+    color: white !important;
+}
+
+/* CONTENT */
+.content-area {
+    padding: 30px;
+}
+
+/* ALERT (MESSAGES OPTIONAL) */
+.alert {
+    margin: 15px;
+    border-radius: 10px;
+}
+
+/* ===== DESCRIPTION FIX (IMPORTANT) ===== */
+.description {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* IMAGES FIX */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="main-box">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+
+    <a class="navbar-brand nav-title" href="#">
+        Fake Review Detection System
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+
+        <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+
+            {% if user.is_authenticated %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+
+            <li class="nav-item">
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn ml-2">Logout</button>
+                </form>
+            </li>
+
+            {% else %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+
+            {% endif %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+            </li>
+
+        </ul>
+
+    </div>
+</nav>
+
+<!-- OPTIONAL MESSAGES (ONLY SHOW IF NEEDED) -->
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+        <div class="alert alert-info text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- CONTENT -->
+<div class="content-area">
+{% block content %}
+{% endblock %}
+</div>
+
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

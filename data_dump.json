@@ -1,0 +1,373 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$OVJAcuI8ozB6GI7eo6epUg$VNeRNM5nbCYXVL0CkntlcwYO0r4KAAjXshATv+pzTfA=",
+    "last_login": "2026-08-29T14:42:40.966Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-03T17:22:56.360Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$hNEYvdlvq7qYaUTnCt5n8l$P8JPwuOQD7sDUZ+2BB0jpuwgsbG7MdtwM/UKDqhlLcQ=",
+    "last_login": "2026-05-10T19:11:16.343Z",
+    "is_superuser": false,
+    "username": "Nafeesa",
+    "first_name": "",
+    "last_name": "",
+    "email": "nafeesa@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-04T12:42:18.184Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$seHth5Y1nn4FCP6GfvJTyd$QCMf/izYCQ3QTrVGeqmUHYDVbGMUKT4j+HiwL976tDk=",
+    "last_login": "2026-05-05T15:21:49.203Z",
+    "is_superuser": false,
+    "username": "Samia",
+    "first_name": "",
+    "last_name": "",
+    "email": "Samia@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-05T15:21:21.078Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$RnSlrDNvVNBH1Ii0VFHVwf$iQjDlMGKivdtTws2rvcvtTyVVVumhiO13lIFWnlgu1M=",
+    "last_login": "2026-06-05T15:21:58.472Z",
+    "is_superuser": false,
+    "username": "Hasiba",
+    "first_name": "",
+    "last_name": "",
+    "email": "hasibanazir876@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-05T15:21:39.397Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$LuiCgrVOwp1CKELNeZQxJd$/bw/+W3/3SQOzHITkM+dBwygrfUWVyn7XbcoF9whbVk=",
+    "last_login": "2026-08-29T13:49:59.417Z",
+    "is_superuser": false,
+    "username": "Khadija",
+    "first_name": "",
+    "last_name": "",
+    "email": "Khadija@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-29T13:49:48.594Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 2,
+  "fields": {
+    "Image": "Product_Images/simpson_fancy_love_set_3.webp",
+    "Product_Name": "Simpson Perfume",
+    "Category": "Men’s & Women’s",
+    "Description": "Simpson Perfume is a fresh and mild fragrance with light floral and musky notes, suitable for daily",
+    "Added_At": "2026-05-04T14:12:42.962Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 4,
+  "fields": {
+    "Image": "Product_Images/SOPHIA_-1_QHP49l8.webp",
+    "Product_Name": "Sophia Perfume",
+    "Category": "Eau de Parfum",
+    "Description": "A soft floral women’s perfume with a fresh, elegant, and long-lasting scent suitable for everyday use.",
+    "Added_At": "2026-05-04T14:40:14.650Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 5,
+  "fields": {
+    "Image": "Product_Images/blossom_2_6Y26EUQ.jpg",
+    "Product_Name": "BOLOSSOM Perfume",
+    "Category": "Fragrance",
+    "Description": "A light floral fragrance inspired by blooming flowers, offering a fresh, sweet, and feminine scent ideal for daily wear.",
+    "Added_At": "2026-05-04T14:41:38.498Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 6,
+  "fields": {
+    "Image": "Product_Images/jessica-simpson-jessica-simpson-fancy-girl_4.webp",
+    "Product_Name": "JESSICA Perfume",
+    "Category": "Fragrance",
+    "Description": "A smooth feminine fragrance with a balanced floral and soft sweet scent that feels elegant, fresh, and suitable for everyday wear.",
+    "Added_At": "2026-05-04T14:42:56.560Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 7,
+  "fields": {
+    "Image": "Product_Images/men6.jpg",
+    "Product_Name": "ROYAL OUD",
+    "Category": "Men’s Fragrance",
+    "Description": "A rich and powerful woody oud fragrance with warm, luxurious notes that create a bold and long-lasting masculine scent.",
+    "Added_At": "2026-05-04T14:44:15.670Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 8,
+  "fields": {
+    "Image": "Product_Images/p17380-yacht-man-aqua-perfume_5.webp",
+    "Product_Name": "Yacht Man Aqua (P17380)",
+    "Category": "Men’s Fragrance",
+    "Description": "A fresh aquatic men’s perfume with citrus, woody, and musky notes that gives a clean, energetic, and long-lasting ocean-inspired scent.",
+    "Added_At": "2026-05-04T14:45:40.728Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 9,
+  "fields": {
+    "Image": "Product_Images/bag_07.jpg",
+    "Product_Name": "White Hand Bag",
+    "Category": "Fashion Accessories",
+    "Description": "A stylish white handbag designed for carrying daily essentials with a clean, elegant, and versatile look suitable for casual and formal use.",
+    "Added_At": "2026-05-04T14:47:31.257Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 10,
+  "fields": {
+    "Image": "Product_Images/bag_08.jpg",
+    "Product_Name": "Black Hand Bag",
+    "Category": "Women’s Handbag",
+    "Description": "A stylish black handbag with a sleek and elegant design, perfect for daily use and suitable for both casual and formal outfits.",
+    "Added_At": "2026-05-04T14:48:27.263Z"
+  }
+},
+{
+  "model": "reviews.product",
+  "pk": 11,
+  "fields": {
+    "Image": "Product_Images/bag_09.jpg",
+    "Product_Name": "Fancy Pink Hand Bag",
+    "Category": "Fashion Accessories",
+    "Description": "A stylish fancy pink handbag with an elegant and trendy design, perfect for adding a soft, feminine touch to both casual and party outfits.",
+    "Added_At": "2026-05-04T14:49:29.268Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 1,
+  "fields": {
+    "product": 2,
+    "user": [
+      "Nafeesa"
+    ],
+    "review_text": "Nice",
+    "is_duplicate": false,
+    "sentiment_score": 0.4215,
+    "sentiment_label": "positive",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:00:34.555Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 2,
+  "fields": {
+    "product": 2,
+    "user": [
+      "Nafeesa"
+    ],
+    "review_text": "Bad",
+    "is_duplicate": false,
+    "sentiment_score": -0.5423,
+    "sentiment_label": "negative",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:00:45.668Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 3,
+  "fields": {
+    "product": 2,
+    "user": [
+      "Nafeesa"
+    ],
+    "review_text": "Normal",
+    "is_duplicate": false,
+    "sentiment_score": 0.0,
+    "sentiment_label": "neutral",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:00:58.851Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 4,
+  "fields": {
+    "product": 4,
+    "user": [
+      "Nafeesa"
+    ],
+    "review_text": "Broken",
+    "is_duplicate": false,
+    "sentiment_score": -0.4767,
+    "sentiment_label": "negative",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:16:56.056Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 5,
+  "fields": {
+    "product": 4,
+    "user": [
+      "Samia"
+    ],
+    "review_text": "Bad",
+    "is_duplicate": false,
+    "sentiment_score": -0.5423,
+    "sentiment_label": "negative",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:22:13.462Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 6,
+  "fields": {
+    "product": 4,
+    "user": [
+      "Samia"
+    ],
+    "review_text": "good",
+    "is_duplicate": false,
+    "sentiment_score": 0.4404,
+    "sentiment_label": "positive",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:22:29.731Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 7,
+  "fields": {
+    "product": 4,
+    "user": [
+      "Samia"
+    ],
+    "review_text": "ok",
+    "is_duplicate": false,
+    "sentiment_score": 0.296,
+    "sentiment_label": "positive",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:22:45.428Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 8,
+  "fields": {
+    "product": 4,
+    "user": [
+      "Samia"
+    ],
+    "review_text": "bad",
+    "is_duplicate": false,
+    "sentiment_score": -0.5423,
+    "sentiment_label": "negative",
+    "is_fake": true,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-05-05T15:23:20.574Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 9,
+  "fields": {
+    "product": 4,
+    "user": [
+      "Hasiba"
+    ],
+    "review_text": "GOOD\r\n",
+    "is_duplicate": false,
+    "sentiment_score": 0.4404,
+    "sentiment_label": "positive",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-06-05T15:24:42.307Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 12,
+  "fields": {
+    "product": 8,
+    "user": [
+      "Khadija"
+    ],
+    "review_text": "very good",
+    "is_duplicate": false,
+    "sentiment_score": 0.4927,
+    "sentiment_label": "positive",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-08-29T13:50:22.080Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 13,
+  "fields": {
+    "product": 11,
+    "user": [
+      "Khadija"
+    ],
+    "review_text": "Very NICE",
+    "is_duplicate": false,
+    "sentiment_score": 0.5894,
+    "sentiment_label": "positive",
+    "is_fake": false,
+    "ip_address": "127.0.0.1",
+    "created_at": "2026-08-29T13:50:42.687Z"
+  }
+}
+]

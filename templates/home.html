@@ -1,0 +1,634 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================
+   HOME — LANDING PAGE
+   60 / 30 / 10 AS VISIBLE COLOUR BLOCKS (not just tints)
+
+   The bento grid below is literally 12 units:
+     8 units ink      = 60%  (dominant surface)
+     3 units indigo   = 30%  (filled blocks: stat card, duplicate card, CTA band)
+     1 unit  emerald  = 10%  (one filled block + small markers)
+
+   Flat surfaces, real borders, no blur / glow / gradient text.
+   Scoped to this page only — base.html is untouched.
+   ========================================================= */
+:root {
+    /* ---- 60% DOMINANT — ink ---- */
+    --ink:        #0d1220;
+    --ink-2:      #131a2c;
+    --ink-3:      #1a2238;
+    --line:       #242d47;
+    --line-2:     #313b59;
+    --text:       #eef1f8;
+    --text-mid:   #9aa3bd;
+    --text-dim:   #6b7593;
+
+    /* ---- 30% SECONDARY — indigo ---- */
+    --indigo:     #4f46e5;
+    --indigo-lit: #6366f1;
+    --indigo-ink: #3730a3;
+
+    /* ---- 10% ACCENT — emerald ---- */
+    --emerald:    #10b981;
+    --emerald-dk: #047857;
+
+    --pad-x: clamp(18px, 5vw, 80px);
+}
+
+/* ---------- SHELL (60%) ---------- */
+html, body { height: auto; overflow-x: hidden; overflow-y: auto; scroll-behavior: smooth; }
+body {
+    background: var(--ink) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
+.main-box { min-height: 100vh; }
+.content-area { padding: 0 !important; }
+
+body::-webkit-scrollbar { width: 10px; }
+body::-webkit-scrollbar-track { background: var(--ink); }
+body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 0; }
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--ink) !important;
+    border-bottom: 1px solid var(--line);
+    padding: 15px var(--pad-x) !important;
+}
+.nav-title { font-size: 15.5px !important; font-weight: 700 !important; letter-spacing: -0.015em; }
+.navbar .nav-link {
+    background: transparent !important;
+    color: var(--text-mid) !important;
+    font-size: 14px !important; font-weight: 500 !important;
+    padding: 8px 13px !important; border-radius: 6px !important;
+}
+.navbar .nav-link:hover { background: var(--ink-3) !important; color: #fff !important; }
+.navbar .btn {
+    background: var(--ink-3) !important; color: var(--text) !important;
+    border-radius: 6px !important; font-size: 14px !important;
+    font-weight: 500 !important; padding: 8px 13px !important;
+}
+.navbar .btn:hover { background: var(--indigo) !important; color: #fff !important; }
+
+/* ---------- SECTION SCAFFOLD ---------- */
+.section { padding: clamp(56px, 8vh, 96px) var(--pad-x); }
+.section-inner { max-width: 1360px; margin: 0 auto; }
+
+/* small editorial label: "01 / what it checks" */
+.label {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim);
+}
+.label b { color: var(--indigo-lit); font-weight: 700; }
+.label i {
+    flex: 1; height: 1px; background: var(--line); font-style: normal; max-width: 120px;
+}
+
+.section-title {
+    margin: 20px 0 14px;
+    font-size: clamp(27px, 3vw, 40px);
+    font-weight: 800; line-height: 1.14; letter-spacing: -0.035em; color: #fff;
+}
+.section-lead {
+    max-width: 580px; margin: 0;
+    font-size: 15.5px; line-height: 1.65; color: var(--text-mid);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn-custom {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    min-width: 176px; padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 14.5px; font-weight: 600; text-decoration: none;
+    transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+.btn-custom:hover { text-decoration: none; }
+.btn-custom svg { width: 17px; height: 17px; flex: none; }
+
+.btn-admin { background: var(--indigo); color: #fff; }        /* 30% */
+.btn-admin:hover { background: var(--indigo-lit); color: #fff; }
+
+.btn-user {                                                   /* neutral 60% */
+    background: transparent; border: 1px solid var(--line-2); color: var(--text);
+}
+.btn-user:hover { background: var(--ink-3); border-color: var(--text-dim); color: #fff; }
+
+/* =========================================================
+   1. HERO — ink left (60%), solid indigo panel right (30%)
+   ========================================================= */
+.hero { padding: clamp(48px, 7vh, 90px) var(--pad-x) clamp(52px, 7vh, 88px); border-bottom: 1px solid var(--line); }
+.hero-inner {
+    max-width: 1360px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(28px, 4vw, 64px); align-items: stretch;
+}
+.hero-left { display: flex; flex-direction: column; justify-content: center; }
+.hero-title {
+    margin: 20px 0 18px;
+    font-size: clamp(32px, 4.1vw, 56px);
+    line-height: 1.06; font-weight: 800; letter-spacing: -0.045em; color: #fff;
+}
+.hero-lead {
+    max-width: 520px; margin: 0 0 32px;
+    font-size: 16px; line-height: 1.65; color: var(--text-mid);
+}
+
+/* the indigo block — this is a big, visible chunk of the 30% */
+.hero-panel {
+    background: var(--indigo);
+    border-radius: 14px;
+    padding: 28px 26px;
+    display: flex; flex-direction: column;
+}
+.hp-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    padding-bottom: 16px; margin-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+}
+.hp-head h3 { margin: 0; font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+.hp-head span { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); letter-spacing: 0.06em; }
+
+.signal { display: flex; align-items: center; gap: 14px; padding: 17px 0; }
+.signal + .signal { border-top: 1px solid rgba(255, 255, 255, 0.16); }
+.signal-n {
+    flex: none; width: 26px;
+    font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55);
+}
+.signal-body { flex: 1; min-width: 0; }
+.signal-body h4 { margin: 0 0 3px; font-size: 14.5px; font-weight: 650; color: #fff; }
+.signal-body p  { margin: 0; font-size: 12.8px; line-height: 1.45; color: rgba(255,255,255,0.72); }
+/* the accent marker (10%) */
+.signal-dot {
+    flex: none; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--emerald);
+}
+
+/* =========================================================
+   2. BENTO — the 60/30/10 split made literal
+   ========================================================= */
+.bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(150px, auto);
+    gap: 14px;
+    margin-top: 40px;
+}
+.cell {
+    border-radius: 14px;
+    padding: 26px 24px;
+    display: flex; flex-direction: column;
+    transition: transform .18s ease, border-color .18s ease;
+}
+.cell:hover { transform: translateY(-3px); }
+
+/* 60% — ink cells */
+.cell.ink {
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+}
+/* HOVER: ink cell fills with indigo — the clearest colour change on the page */
+.cell.ink:hover {
+    background: var(--indigo);
+    border-color: var(--indigo-lit);
+}
+.cell.ink:hover p            { color: rgba(255, 255, 255, 0.86); }
+.cell.ink:hover .cell-tag    { background: rgba(255, 255, 255, 0.22); color: #fff; }
+.cell.ink:hover .scale-track i:nth-child(2),
+.cell.ink:hover .scale-track i:nth-child(3) { background: rgba(255, 255, 255, 0.28); }
+.cell.ink:hover .scale-track i:nth-child(1) { background: rgba(255, 255, 255, 0.55); }
+.cell.ink:hover .scale-labels   { color: rgba(255, 255, 255, 0.72); }
+.cell.ink:hover .scale-labels b { color: #fff; }
+
+/* 30% — filled indigo cells */
+.cell.indigo { background: var(--indigo); border: 1px solid var(--indigo); }
+/* HOVER: indigo deepens */
+.cell.indigo:hover { background: var(--indigo-ink); border-color: rgba(255, 255, 255, 0.35); }
+
+/* 10% — filled emerald cell */
+.cell.emerald { background: var(--emerald); border: 1px solid var(--emerald); }
+/* HOVER: emerald deepens */
+.cell.emerald:hover { background: var(--emerald-dk); border-color: rgba(255, 255, 255, 0.35); }
+
+.a-lg   { grid-column: span 2; grid-row: span 2; }
+.a-wide { grid-column: span 2; }
+
+.cell h3 {
+    margin: 0 0 9px; font-size: 17px; font-weight: 700;
+    letter-spacing: -0.02em; color: #fff;
+}
+.a-lg h3 { font-size: clamp(20px, 1.7vw, 24px); }
+.cell p { margin: 0; font-size: 13.8px; line-height: 1.6; color: var(--text-mid); }
+.cell.indigo p, .cell.emerald p { color: rgba(255, 255, 255, 0.82); }
+
+.cell-tag {
+    display: inline-block; align-self: flex-start;
+    margin-bottom: 16px; padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.ink .cell-tag     { background: var(--ink-3); color: var(--text-dim); }
+.indigo .cell-tag  { background: rgba(255,255,255,0.2); color: #fff; }
+.emerald .cell-tag { background: rgba(255,255,255,0.24); color: #fff; }
+
+/* stat cells */
+.cell .num {
+    font-size: clamp(38px, 3.6vw, 52px); font-weight: 800;
+    line-height: 1; letter-spacing: -0.05em; color: #fff; margin-bottom: 10px;
+}
+.cell .num.sm { font-size: clamp(26px, 2.4vw, 34px); }
+
+/* flat sentiment scale inside the big cell */
+.scale { margin-top: auto; padding-top: 30px; }
+.scale-track {
+    display: flex; height: 10px; border-radius: 3px; overflow: hidden;
+}
+.scale-track i { flex: 1; font-style: normal; }
+.scale-track i:nth-child(1) { background: #7f2b2b; }
+.scale-track i:nth-child(2) { background: var(--ink-3); }
+.scale-track i:nth-child(3) { background: var(--ink-3); }
+.scale-track i:nth-child(4) { background: var(--emerald); }
+.scale-labels {
+    display: flex; justify-content: space-between;
+    margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--text-dim);
+}
+.scale-labels b { color: var(--emerald); font-weight: 700; }
+
+/* =========================================================
+   3. STEPS
+   ========================================================= */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 40px; }
+.step {
+    background: var(--ink-2); border: 1px solid var(--line);
+    border-radius: 14px; padding: 26px 24px;
+    transition: border-color .18s ease, transform .18s ease;
+}
+/* HOVER: step card fills with indigo too */
+.step:hover {
+    background: var(--indigo);
+    border-color: var(--indigo-lit);
+    transform: translateY(-3px);
+}
+.step:hover p          { color: rgba(255, 255, 255, 0.86); }
+.step:hover .step-n    { background: #fff; color: var(--indigo); }
+.step:last-child:hover { background: var(--emerald); border-color: var(--emerald); }
+.step:last-child:hover .step-n { background: #fff; color: var(--emerald-dk); }
+.step-n {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; margin-bottom: 16px;
+    border-radius: 8px;
+    background: var(--indigo); color: #fff;             /* 30% */
+    font-size: 14px; font-weight: 800;
+}
+.step:last-child .step-n { background: var(--emerald); }  /* 10% */
+.step h3 { margin: 0 0 8px; font-size: 16.5px; font-weight: 700; letter-spacing: -0.02em; color: #fff; }
+.step p  { margin: 0; font-size: 13.8px; line-height: 1.6; color: var(--text-mid); }
+
+/* =========================================================
+   4. CTA — full-bleed solid indigo band, split layout
+   ========================================================= */
+.cta {
+    background: var(--indigo);                          /* the largest 30% block */
+    border-top: 1px solid var(--indigo);
+    padding: clamp(52px, 7vh, 88px) var(--pad-x);
+}
+.cta-inner {
+    max-width: 1360px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(30px, 5vw, 76px); align-items: center;
+}
+.cta-label {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.62);
+}
+.cta-label i { width: 44px; height: 1px; background: rgba(255,255,255,0.4); font-style: normal; }
+.cta h2 {
+    margin: 20px 0 16px;
+    font-size: clamp(29px, 3.6vw, 48px);
+    font-weight: 800; line-height: 1.08; letter-spacing: -0.045em; color: #fff;
+}
+.cta > .cta-inner > div > p {
+    max-width: 480px; margin: 0;
+    font-size: 16px; line-height: 1.65; color: rgba(255,255,255,0.8);
+}
+
+/* right side: a plain bordered box, offset from the band */
+.cta-box {
+    background: var(--indigo-ink);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 14px;
+    padding: 28px 26px;
+}
+.cta-box h3 {
+    margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -0.01em;
+}
+.cta-box > p {
+    margin: 0 0 22px; font-size: 13.4px; line-height: 1.5; color: rgba(255,255,255,0.7);
+}
+.cta-box .actions { flex-direction: column; gap: 10px; }
+.cta-box .btn-custom { width: 100%; min-width: 0; }
+/* inside the indigo band the buttons invert: emerald primary (10%), outline secondary */
+.cta-box .btn-admin { background: var(--emerald); color: #fff; }
+.cta-box .btn-admin:hover { background: #0ea373; color: #fff; }
+.cta-box .btn-user { border-color: rgba(255,255,255,0.34); color: #fff; }
+.cta-box .btn-user:hover { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.5); }
+
+.cta-list { margin: 24px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px 24px; }
+.cta-list li {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13.4px; font-weight: 500; color: rgba(255,255,255,0.82);
+}
+.cta-list svg { width: 15px; height: 15px; flex: none; }
+
+/* =========================================================
+   5. FOOTER
+   ========================================================= */
+.site-footer { padding: 26px var(--pad-x); border-top: 1px solid var(--line); }
+.footer-inner {
+    max-width: 1360px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 700; color: #fff; }
+.footer-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); }
+.footer-links { display: flex; flex-wrap: wrap; gap: 4px; }
+.footer-links a {
+    padding: 6px 11px; border-radius: 6px;
+    font-size: 13px; font-weight: 500; color: var(--text-mid); text-decoration: none;
+    transition: background .16s ease, color .16s ease;
+}
+.footer-links a:hover { background: var(--ink-3); color: #fff; text-decoration: none; }
+.footer-note { font-size: 12.5px; color: var(--text-dim); }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1024px) {
+    .hero-inner, .cta-inner { grid-template-columns: 1fr; }
+    .hero-lead { max-width: none; }
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .a-lg  { grid-column: span 2; grid-row: span 1; }
+}
+@media (max-width: 600px) {
+    .navbar { padding: 12px 16px !important; }
+    .btn-custom { flex: 1; min-width: 0; padding: 13px 16px; }
+    .bento { grid-template-columns: 1fr; }
+    .a-lg, .a-wide { grid-column: span 1; }
+    .cell, .step { padding: 22px 20px; }
+}
+</style>
+
+<!-- ===================== 1. HERO ===================== -->
+<header class="hero">
+    <div class="hero-inner">
+
+        <div class="hero-left">
+            <div class="label"><b>01</b> <i></i> Fake review detection</div>
+
+            <h1 class="hero-title">Every review gets checked before it counts.</h1>
+
+            <p class="hero-lead">
+                Reviews are scored with VADER, compared against what the same user already
+                wrote for that product, and stored with the IP they arrived from. Products are
+                then ranked by the sentiment that holds up.
+            </p>
+
+            <div class="actions">
+                <a href="{% url 'admin_login' %}" class="btn-custom btn-admin">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Admin Login
+                </a>
+                <a href="{% url 'login' %}" class="btn-custom btn-user">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    User Login
+                </a>
+            </div>
+        </div>
+
+        <!-- SOLID INDIGO BLOCK (30%) -->
+        <aside class="hero-panel">
+            <div class="hp-head">
+                <h3>Detection signals</h3>
+                <span>3 ACTIVE</span>
+            </div>
+
+            <div class="signal">
+                <span class="signal-n">01</span>
+                <div class="signal-body">
+                    <h4>Sentiment score</h4>
+                    <p>VADER compound value stored on every review.</p>
+                </div>
+                <span class="signal-dot"></span>
+            </div>
+
+            <div class="signal">
+                <span class="signal-n">02</span>
+                <div class="signal-body">
+                    <h4>Duplicate match</h4>
+                    <p>Repeated text from the same user is caught.</p>
+                </div>
+                <span class="signal-dot"></span>
+            </div>
+
+            <div class="signal">
+                <span class="signal-n">03</span>
+                <div class="signal-body">
+                    <h4>IP address</h4>
+                    <p>The origin address is recorded per submission.</p>
+                </div>
+                <span class="signal-dot"></span>
+            </div>
+        </aside>
+
+    </div>
+</header>
+
+<!-- ===================== 2. BENTO ===================== -->
+<section class="section" id="features">
+    <div class="section-inner">
+
+        <div class="label"><b>02</b> <i></i> What it checks</div>
+        <h2 class="section-title">Three signals, one verdict</h2>
+        <p class="section-lead">
+            No single clue proves a review is fake. All three are read together before
+            anything is flagged.
+        </p>
+
+        <div class="bento">
+
+            <!-- INK — 4 units -->
+            <article class="cell ink a-lg">
+                <span class="cell-tag">Signal 01</span>
+                <h3>Sentiment analysis</h3>
+                <p>
+                    Each review runs through VADER, which returns a compound score between
+                    &minus;1 and +1 along with a label. The score is saved on the review, so
+                    products can later be ordered by how their reviews actually read.
+                </p>
+
+                <div class="scale">
+                    <div class="scale-track"><i></i><i></i><i></i><i></i></div>
+                    <div class="scale-labels">
+                        <span>&minus;1.00</span>
+                        <span>0.00 neutral</span>
+                        <span><b>+1.00</b></span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- INDIGO — 1 unit -->
+            <article class="cell indigo">
+                <div class="num">3</div>
+                <p>Signals checked on every submission.</p>
+            </article>
+
+            <!-- EMERALD — 1 unit -->
+            <article class="cell emerald">
+                <div class="num sm">VADER</div>
+                <p>Lexicon and rule-based scoring.</p>
+            </article>
+
+            <!-- INDIGO — 2 units -->
+            <article class="cell indigo a-wide">
+                <span class="cell-tag">Signal 02</span>
+                <h3>Duplicate detection</h3>
+                <p>
+                    Copy-pasted praise is the cheapest way to move a rating. Matching text from
+                    the same user on the same product is marked as a duplicate.
+                </p>
+            </article>
+
+            <!-- INK — 2 units -->
+            <article class="cell ink a-wide">
+                <span class="cell-tag">Signal 03</span>
+                <h3>IP tracking</h3>
+                <p>
+                    The address behind each submission is recorded, so a run of glowing reviews
+                    arriving from one place is visible rather than hidden.
+                </p>
+            </article>
+
+            <!-- INK — 2 units -->
+            <article class="cell ink a-wide">
+                <span class="cell-tag">Result</span>
+                <h3>Ranked by what survives</h3>
+                <p>
+                    Products are ordered by the average sentiment of the reviews that pass the
+                    checks &mdash; not by how many reviews they collected.
+                </p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 3. STEPS ===================== -->
+<section class="section" id="how" style="border-top:1px solid var(--line);">
+    <div class="section-inner">
+
+        <div class="label"><b>03</b> <i></i> How it works</div>
+        <h2 class="section-title">From submission to verdict</h2>
+        <p class="section-lead">
+            The whole pipeline runs the moment a review is posted. Nothing waits in a queue.
+        </p>
+
+        <div class="steps">
+            <article class="step">
+                <div class="step-n">1</div>
+                <h3>Review submitted</h3>
+                <p>A signed-in user writes a review on a product. The text and the originating IP address are captured together.</p>
+            </article>
+
+            <article class="step">
+                <div class="step-n">2</div>
+                <h3>Analysed automatically</h3>
+                <p>VADER produces a sentiment score and label, while the text is compared against what that user already wrote for the product.</p>
+            </article>
+
+            <article class="step">
+                <div class="step-n">3</div>
+                <h3>Flagged or approved</h3>
+                <p>Suspicious entries are marked as fake, and every product is ranked by the average sentiment of the reviews that survive.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 4. CTA ===================== -->
+<section class="cta">
+    <div class="cta-inner">
+
+        <div>
+            <div class="cta-label"><i></i> 04 &mdash; Get started</div>
+
+            <h2>Browse the catalogue and leave a review that counts.</h2>
+
+            <p>
+                Sign in to see every product ranked by sentiment, then post your own review
+                and watch it get scored the moment you submit it.
+            </p>
+
+            <ul class="cta-list">
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    Scored on submission
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    Duplicates flagged
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    IP recorded
+                </li>
+            </ul>
+        </div>
+
+        <div class="cta-box">
+            <h3>Choose how you sign in</h3>
+            <p>Reviewers use the user login. Catalogue and review records live in the admin panel.</p>
+
+            <div class="actions">
+                <a href="{% url 'login' %}" class="btn-custom btn-admin">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    User Login
+                </a>
+                <a href="{% url 'admin_login' %}" class="btn-custom btn-user">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Admin Login
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ===================== 5. FOOTER ===================== -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <span class="dot"></span>
+            Fake Review Detection System
+        </div>
+
+        <nav class="footer-links">
+            <a href="#features">Features</a>
+            <a href="#how">How it works</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        </nav>
+
+        <div class="footer-note">Sentiment &middot; Duplicates &middot; IP signals</div>
+    </div>
+</footer>
+
+{% endblock %}
