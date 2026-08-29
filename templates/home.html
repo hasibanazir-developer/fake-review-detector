@@ -40,7 +40,10 @@
 }
 
 /* ---------- SHELL (60%) ---------- */
-html, body { height: auto; overflow-x: hidden; overflow-y: auto; scroll-behavior: smooth; }
+/* overflow-x lives on body only: on <html> it makes html a scroll container,
+   which stops position:sticky from working on the navbar. */
+html { height: auto; scroll-behavior: smooth; }
+body { overflow-x: hidden; }
 body {
     background: var(--ink) !important;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
@@ -75,6 +78,16 @@ body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 0; }
     font-weight: 500 !important; padding: 8px 13px !important;
 }
 .navbar .btn:hover { background: var(--indigo) !important; color: #fff !important; }
+
+/* ---- mobile nav: the burger inherits this page's own palette ---- */
+.navbar-toggler { color: var(--text-mid); border-color: var(--line-2) !important; }
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        margin-top: 10px;
+        padding: 10px 0 2px !important;
+        border-top: 1px solid var(--line);
+    }
+}
 
 /* ---------- SECTION SCAFFOLD ---------- */
 .section { padding: clamp(56px, 8vh, 96px) var(--pad-x); }

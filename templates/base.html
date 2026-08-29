@@ -105,6 +105,36 @@ img {
     display: block;
 }
 
+
+/* ===== MOBILE NAV (applies to every page) ===== */
+.navbar-toggler {
+    padding: 6px 9px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: transparent;
+    line-height: 0;
+    opacity: .75;
+    transition: opacity .15s ease;
+}
+.navbar-toggler:hover { opacity: 1; }
+.navbar-toggler:focus { outline: none; box-shadow: none; }
+.nav-burger { width: 22px; height: 22px; display: block; }
+
+@media (max-width: 991.98px) {
+    /* Stack the menu instead of letting it inherit the desktop row layout */
+    .navbar-collapse { padding-top: 12px; padding-bottom: 4px; }
+    .navbar-nav { margin-left: 0 !important; width: 100%; }
+    .navbar-nav .nav-item { width: 100%; }
+    .navbar-nav .nav-link {
+        display: block;
+        width: 100%;
+        margin: 3px 0 !important;
+        text-align: left;
+    }
+    .navbar-nav form { width: 100%; margin: 3px 0; }
+    .navbar-nav .btn { width: 100%; margin-left: 0 !important; }
+}
+
 </style>
 
 </head>
@@ -120,8 +150,15 @@ img {
         Fake Review Detection System
     </a>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- Inline icon instead of .navbar-toggler-icon: that one is a fixed white
+             SVG from navbar-dark, which was invisible on the light-navbar pages.
+             This inherits currentColor, so each page can colour it. -->
+        <svg class="nav-burger" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
