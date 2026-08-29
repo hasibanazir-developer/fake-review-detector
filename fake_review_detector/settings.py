@@ -25,14 +25,22 @@ SECRET_KEY = os.environ.get(
     'django-insecure-k1=i+#&x@u2y&p$sx_bvfl!ht+ker#1f-#6oo3s&9@hy$s^)9j',
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# Stays True locally; set DEBUG=False in the Vercel environment variables.
-DEBUG = _env_bool('DEBUG', True)
+# Vercel sets VERCEL=1 in its runtime environment.
+ON_VERCEL = bool(os.environ.get('VERCEL'))
 
-# Local dev keeps the old empty-list behaviour; production allows the Vercel host.
+# SECURITY WARNING: don't run with debug turned on in production!
+# True locally, False on Vercel automatically — so a forgotten environment
+# variable can't leave the deployed site running in debug mode.
+DEBUG = _env_bool('DEBUG', not ON_VERCEL)
+
 ALLOWED_HOSTS = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h.strip()]
-if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app'] if not DEBUG else []
+
+# Always trust Vercel's own domain and the local host names. Without this, a
+# missing ALLOWED_HOSTS variable makes Django reject every request with a bare
+# 400 DisallowedHost, which is hard to read as a configuration problem.
+for _host in ('.vercel.app', 'localhost', '127.0.0.1', '[::1]'):
+    if _host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_host)
 
 # Vercel serves over HTTPS, so POST forms need the origin trusted.
 CSRF_TRUSTED_ORIGINS = [
