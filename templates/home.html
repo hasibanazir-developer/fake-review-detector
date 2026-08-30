@@ -17,6 +17,10 @@
    Scoped to this page only — base.html is untouched.
    ========================================================= */
 :root {
+    /* Mobile menu icon - light indigo on the shared dark bar. Read by base.html, which needs the
+       !important there to beat Bootstrap's .navbar-dark rule. */
+    --burger: #a5b4fc;
+
     /* ---- 60% DOMINANT — ink ---- */
     --ink:        #0d1220;
     --ink-2:      #131a2c;
@@ -80,7 +84,8 @@ body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 0; }
 .navbar .btn:hover { background: var(--indigo) !important; color: #fff !important; }
 
 /* ---- mobile nav: the burger inherits this page's own palette ---- */
-.navbar-toggler { color: var(--text-mid); border-color: var(--line-2) !important; }
+/* Burger colour lives in --burger above - a bare .navbar-toggler
+   selector loses to Bootstrap's .navbar-dark .navbar-toggler. */
 @media (max-width: 991.98px) {
     .navbar-collapse {
         margin-top: 10px;

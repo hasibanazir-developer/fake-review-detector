@@ -161,6 +161,11 @@ if DATABASE_URL:
     except Exception as _exc:    # noqa: BLE001 - reporting beats crashing
         DATABASE_URL_ERROR = _redact(f'{type(_exc).__name__}: {_exc}')
         _db = None
+        # Goes to the Vercel function log. Without it a bad URL is silent:
+        # the site quietly falls back to a SQLite file that is not deployed,
+        # and every database page fails with a misleading "unable to open
+        # database file" instead of the real parsing error.
+        print('DATABASE_URL could not be parsed -', DATABASE_URL_ERROR)
 
 if _db is not None:
     _options = _db.setdefault('OPTIONS', {})
