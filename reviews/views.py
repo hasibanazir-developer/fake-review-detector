@@ -148,3 +148,52 @@ def add_review(request, product_id):
         return redirect('dashboard')
 
     return render(request, 'add_review.html', {'product': product})
+
+
+# ---------------------------------------------------------------------------
+# Temporary deployment diagnostics. Remove once the 500 is resolved.
+#
+# DEBUG is off in production, so Django replies with a blank "Server Error
+# (500)" page and the real exception is only visible in Vercel's function log.
+# This endpoint reports just enough to identify the cause. It never exposes the
+# password: only the host, port and database name, which are already in
+# DEPLOY.md.
+# ---------------------------------------------------------------------------
+import os
+
+from django.conf import settings as _settings
+from django.contrib.auth.models import User
+from django.db import connection as _connection
+from django.http import JsonResponse
+
+
+def healthz(request):
+    db = _settings.DATABASES['default']
+    info = {
+        'engine': db['ENGINE'].rsplit('.', 1)[-1],
+        'database_url_set': bool(os.environ.get('DATABASE_URL')),
+        'missing_database_url': getattr(_settings, 'MISSING_DATABASE_URL', False),
+        'host': db.get('HOST') or '(none)',
+        'port': str(db.get('PORT') or '(none)'),
+        'name': str(db.get('NAME')),
+        'on_vercel': bool(os.environ.get('VERCEL')),
+        'region': os.environ.get('VERCEL_REGION', '(unset)'),
+    }
+
+    try:
+        with _connection.cursor() as cur:
+            cur.execute('SELECT 1')
+            cur.fetchone()
+    except Exception as exc:                      # noqa: BLE001 - reporting it is the point
+        info['db_ok'] = False
+        info['error_type'] = type(exc).__name__
+        info['error'] = str(exc).strip()[:400]
+    else:
+        info['db_ok'] = True
+        # Confirms migrations actually ran against this database.
+        try:
+            info['user_count'] = User.objects.count()
+        except Exception as exc:                  # noqa: BLE001
+            info['user_count'] = f'{type(exc).__name__}: {str(exc).strip()[:200]}'
+
+    return JsonResponse(info, json_dumps_params={'indent': 2})

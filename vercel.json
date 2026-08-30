@@ -4,10 +4,19 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "40mb" }
+      "config": {
+        "maxLambdaSize": "40mb",
+        "includeFiles": "{media,staticfiles,templates,reviews,fake_review_detector}/**"
+      }
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "api/index.py" }
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
+  ],
+  "regions": [
+    "hnd1"
   ]
 }

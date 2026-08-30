@@ -120,6 +120,16 @@ DATABASES = {
 }
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
+# On Vercel the SQLite fallback above can never work: db.sqlite3 is gitignored
+# and is not in vercel.json's includeFiles, so it isn't in the bundle at all. A
+# missing DATABASE_URL would surface as a confusing "unable to open database
+# file" deep inside a request, so say plainly what is wrong at import time.
+# Deliberately NOT a hard crash: raising here would take down the pages that
+# work fine without a database (the homepage), turning a partial outage into a
+# total one. /healthz/ reports it instead.
+MISSING_DATABASE_URL = bool(ON_VERCEL and not DATABASE_URL)
+
 if DATABASE_URL:
     import dj_database_url
 
@@ -129,6 +139,12 @@ if DATABASE_URL:
         ssl_require=True,
     )
     _options = _db.setdefault('OPTIONS', {})
+
+    # Fail fast instead of hanging. Without this, an unreachable database makes
+    # psycopg block until Vercel's gateway gives up and returns a bare 504 with
+    # nothing in the function log. Five seconds turns that into a real
+    # OperationalError you can actually read.
+    _options.setdefault('connect_timeout', 5)
 
     # Supabase's pooler URL ends with ?pgbouncer=true. That is a Prisma flag —
     # psycopg treats it as an unknown connection option and refuses to connect.
@@ -187,14 +203,18 @@ if (BASE_DIR / 'static').is_dir():
 
 # Product images.
 #
-# MEDIA_URL stays '/' (so stored paths keep resolving to /Product_Images/<file>),
-# but the files now live in public/ instead of the project root. That folder is
-# the only thing WhiteNoise exposes at the site root in production — pointing it
-# at BASE_DIR would publish settings.py and the database along with it.
+# MEDIA_URL stays '/', so the paths stored in the database keep resolving to
+# /Product_Images/<file>. The files sit in media/ rather than the project root
+# because WHITENOISE_ROOT publishes everything under it at the site root —
+# pointing that at BASE_DIR would serve settings.py and the database too.
 #
 #   Local  -> the static() helper in reviews/urls.py serves them while DEBUG is on.
 #   Vercel -> WhiteNoise serves them straight out of the deployed bundle.
-MEDIA_ROOT = BASE_DIR / 'public'
+#
+# The folder must NOT be named "public": Vercel treats public/ as a framework's
+# static output directory and keeps it out of the serverless function bundle,
+# so WhiteNoise found nothing there and every image 404'd on the live site.
+MEDIA_ROOT = BASE_DIR / 'media'
 
 WHITENOISE_ROOT = MEDIA_ROOT
 

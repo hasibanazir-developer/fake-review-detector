@@ -13,5 +13,6 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('logout/', views.logout_view, name='logout'),  # Add the logout URL
     path('add_review/<int:product_id>/', views.add_review, name='add_review'),  # New review page URL
+    path('healthz/', views.healthz, name='healthz'),  # temporary deploy diagnostics
  
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
