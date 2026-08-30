@@ -178,6 +178,16 @@ def healthz(request):
         'name': str(db.get('NAME')),
         'on_vercel': bool(os.environ.get('VERCEL')),
         'region': os.environ.get('VERCEL_REGION', '(unset)'),
+        'vercel_env': os.environ.get('VERCEL_ENV', '(unset)'),
+        # Which project-level variables reach the function at all. Names and a
+        # yes/no only - never the values. If every one of these is false, the
+        # variables were saved on a different project or environment rather
+        # than being merely mistyped.
+        'env_vars_seen': {
+            k: bool(os.environ.get(k))
+            for k in ('DATABASE_URL', 'SECRET_KEY', 'ALLOWED_HOSTS',
+                      'CSRF_TRUSTED_ORIGINS', 'DEBUG')
+        },
     }
 
     try:

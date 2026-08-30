@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 298
+Content-Type: application/json
+Cross-Origin-Opener-Policy: same-origin
+Date: Sun, 30 Aug 2026 10:44:51 GMT
+Referrer-Policy: same-origin
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Vercel-Cache: MISS
+X-Vercel-Id: bom1::hnd1::brqh5-1788086691446-fbe5dfce4bae
+
