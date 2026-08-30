@@ -130,14 +130,39 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 # total one. /healthz/ reports it instead.
 MISSING_DATABASE_URL = bool(ON_VERCEL and not DATABASE_URL)
 
+# A malformed DATABASE_URL used to raise here, at import time, which took down
+# every page including the ones that need no database at all. Parse defensively
+# instead and let /healthz/ report what is wrong with it.
+DATABASE_URL_ERROR = None
+
+
+def _redact(text):
+    """Strip the password out of anything derived from the connection URL."""
+    import re
+    return re.sub(r'(://[^:/@\s]*:)[^@\s]*(@)', r'\1***\2', str(text))
+
+
+# Must exist even when DATABASE_URL is unset, or the guard below is a
+# NameError at import time -- which is exactly the crash this block
+# is here to prevent.
+_db = None
+
 if DATABASE_URL:
     import dj_database_url
 
-    _db = dj_database_url.parse(
-        DATABASE_URL,
-        conn_max_age=0,          # never reuse across invocations on serverless
-        ssl_require=True,
-    )
+    try:
+        _db = dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=0,      # never reuse across invocations on serverless
+            ssl_require=True,
+        )
+        if not _db.get('HOST'):
+            raise ValueError('no host found in the URL')
+    except Exception as _exc:    # noqa: BLE001 - reporting beats crashing
+        DATABASE_URL_ERROR = _redact(f'{type(_exc).__name__}: {_exc}')
+        _db = None
+
+if _db is not None:
     _options = _db.setdefault('OPTIONS', {})
 
     # Fail fast instead of hanging. Without this, an unreachable database makes

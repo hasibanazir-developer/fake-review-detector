@@ -167,6 +167,26 @@ from django.db import connection as _connection
 from django.http import JsonResponse
 
 
+def _url_shape(url):
+    """Describe a connection URL's structure without revealing the password.
+
+    Enough to spot the usual paste mistakes - a leftover ``[YOUR-PASSWORD]``
+    placeholder, a stray newline, an unencoded ``#`` truncating the string -
+    while never echoing the credential itself.
+    """
+    if not url:
+        return None
+    tail = url.split('@', 1)[1] if '@' in url else '(no @ - password or host missing)'
+    return {
+        'length': len(url),
+        'starts_with': url.split('://', 1)[0] if '://' in url else '(no scheme)',
+        'after_the_at_sign': tail,
+        'has_placeholder_brackets': ('[' in url or ']' in url),
+        'has_whitespace_or_newline': (url.strip() != url or any(c in url for c in ' \t\r\n')),
+        'has_raw_hash': '#' in url,
+    }
+
+
 def healthz(request):
     db = _settings.DATABASES['default']
     info = {
@@ -179,6 +199,9 @@ def healthz(request):
         'on_vercel': bool(os.environ.get('VERCEL')),
         'region': os.environ.get('VERCEL_REGION', '(unset)'),
         'vercel_env': os.environ.get('VERCEL_ENV', '(unset)'),
+        # Why a DATABASE_URL that is present still did not parse. Redacted.
+        'database_url_error': getattr(_settings, 'DATABASE_URL_ERROR', None),
+        'database_url_shape': _url_shape(os.environ.get('DATABASE_URL')),
         # Which project-level variables reach the function at all. Names and a
         # yes/no only - never the values. If every one of these is false, the
         # variables were saved on a different project or environment rather
